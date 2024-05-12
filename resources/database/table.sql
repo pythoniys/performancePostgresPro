@@ -1,7 +1,7 @@
 BEGIN TRANSACTION;
 CREATE TABLE IF NOT EXISTS users (
     user_id int NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
-    username varchar(8) NOT NULL UNIQUE,
+    username varchar(8) NOT NULL,
     password varchar(32) NOT NULL
 );
 END TRANSACTION;

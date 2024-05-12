@@ -63,3 +63,19 @@ func readSQLFile() (string, error) {
 
 	return string(b), nil
 }
+
+func (s *Storage) InsertIntoStorage(username, password string) error {
+	const fn = "storage.postgres.InsertIntoStorage"
+
+	stmt, err := s.db.Prepare("INSERT INTO users(username, password) VALUES ($1, $2)")
+	if err != nil {
+		return fmt.Errorf("%s: %w", fn, err)
+	}
+
+	_, err = stmt.Exec(username, password)
+	if err != nil {
+		return fmt.Errorf("%s: %w", fn, err)
+	}
+
+	return nil
+}
