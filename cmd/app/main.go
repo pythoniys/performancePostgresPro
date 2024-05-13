@@ -16,31 +16,33 @@ func main() {
 	_ = storage
 
 	var num int
-	var dur time.Duration
+	var dur int
 	fmt.Println("Количество параллельных потоков:")
 	fmt.Scanf("%d\n", &num)
-	fmt.Println(num)
 
-	fmt.Println("Длительность вставки:")
+	fmt.Println("Длительность вставки в минутах:")
 	fmt.Scanf("%d\n", &dur)
-	fmt.Println(dur)
 
-	for i := 0; i < num; i++ {
-		go GetResult(dur, num, storage)
+	for j := 0; j < num; j++ {
+		go CallGet(dur, storage)
 	}
-
-	go GetResult(dur, num, storage)
+	time.Sleep(time.Duration(dur) * time.Minute)
 }
 
-func GetResult(duration time.Duration, numOfThreads int, storage *postgres.Storage) {
-	_ = duration
-	_ = numOfThreads
-	fmt.Println("зашел")
+func CallGet(t int, storage *postgres.Storage) {
+	now := time.Now()
+	for time.Since(now) < time.Minute*time.Duration(t) {
+		GetResult(storage)
+		time.Sleep(time.Millisecond * 10)
+	}
+}
 
+func GetResult(storage *postgres.Storage) {
+
+	fmt.Println("ready")
 	err := storage.InsertIntoStorage(helpfunc.RandStringRunes(8), helpfunc.RandStringRunes(32))
 	if err != nil {
 		log.Fatal(err)
-		//return fmt.Errorf("Get result %v", err)
 	}
 
 }
